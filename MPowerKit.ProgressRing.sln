@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPowerKit.ProgressRing", "MPowerKit.ProgressRing\MPowerKit.ProgressRing.csproj", "{C6D558E8-A131-4DB5-A805-9829301B0594}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csproj", "{93E7D1C2-1983-4117-92C9-A09DD344EE60}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C6D558E8-A131-4DB5-A805-9829301B0594}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6D558E8-A131-4DB5-A805-9829301B0594}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6D558E8-A131-4DB5-A805-9829301B0594}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6D558E8-A131-4DB5-A805-9829301B0594}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93E7D1C2-1983-4117-92C9-A09DD344EE60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93E7D1C2-1983-4117-92C9-A09DD344EE60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93E7D1C2-1983-4117-92C9-A09DD344EE60}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{93E7D1C2-1983-4117-92C9-A09DD344EE60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93E7D1C2-1983-4117-92C9-A09DD344EE60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93E7D1C2-1983-4117-92C9-A09DD344EE60}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {16A670D4-E564-49A2-997D-7901C0842D7F}
+	EndGlobalSection
+EndGlobal

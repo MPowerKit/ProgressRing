@@ -1,4 +1,4 @@
-# Plugin.Maui.CircularProgressBar
+# MPowerKit.ProgressRing
 
 Simple platform agnostic MAUI circular progress bar
 

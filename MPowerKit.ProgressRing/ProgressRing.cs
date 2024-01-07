@@ -5,7 +5,7 @@ namespace MPowerKit.ProgressRing;
 public class ProgressRing : GraphicsView
 {
     private readonly IndeterminateRingDrawable _indeterminateDrawable = new();
-    private CancellationTokenSource _indeterminateCts;
+    private CancellationTokenSource? _indeterminateCts;
     private readonly ProgressRingDrawable _progressDrawable = new();
 
     private double _prevProgress;
@@ -13,10 +13,12 @@ public class ProgressRing : GraphicsView
     public ProgressRing()
     {
         _indeterminateDrawable.SetBinding(IndeterminateRingDrawable.ColorProperty, new Binding(ColorProperty.PropertyName, source: this));
+        _indeterminateDrawable.SetBinding(IndeterminateRingDrawable.BackgroundColorProperty, new Binding(BackgroundColorProperty.PropertyName, source: this));
         _indeterminateDrawable.SetBinding(IndeterminateRingDrawable.ThicknessProperty, new Binding(ThicknessProperty.PropertyName, source: this));
         _indeterminateDrawable.SetBinding(IndeterminateRingDrawable.StrokeLineCapProperty, new Binding(StrokeLineCapProperty.PropertyName, source: this));
 
         _progressDrawable.SetBinding(IndeterminateRingDrawable.ColorProperty, new Binding(ColorProperty.PropertyName, source: this));
+        _progressDrawable.SetBinding(IndeterminateRingDrawable.BackgroundColorProperty, new Binding(BackgroundColorProperty.PropertyName, source: this));
         _progressDrawable.SetBinding(IndeterminateRingDrawable.ThicknessProperty, new Binding(ThicknessProperty.PropertyName, source: this));
         _progressDrawable.SetBinding(IndeterminateRingDrawable.StrokeLineCapProperty, new Binding(StrokeLineCapProperty.PropertyName, source: this));
 
@@ -26,7 +28,7 @@ public class ProgressRing : GraphicsView
         this.Drawable = IsIndeterminate ? _indeterminateDrawable : _progressDrawable;
     }
 
-    protected override void OnPropertyChanging([CallerMemberName] string propertyName = null)
+    protected override void OnPropertyChanging([CallerMemberName] string? propertyName = null)
     {
         base.OnPropertyChanging(propertyName);
 
@@ -36,7 +38,7 @@ public class ProgressRing : GraphicsView
         }
     }
 
-    protected override void OnPropertyChanged(string propertyName = null)
+    protected override void OnPropertyChanged(string? propertyName = null)
     {
         base.OnPropertyChanged(propertyName);
 
@@ -111,13 +113,13 @@ public class ProgressRing : GraphicsView
             this.Rotation = de;
         }, 0, 359, length: 2000, repeat: () => true);
 
-        StartIndeterminate(_indeterminateCts.Token, 0, 0);
+        StartIndeterminate(0, 0, _indeterminateCts.Token);
     }
 
-    private async void StartIndeterminate(CancellationToken token, double start, double end)
+    private void StartIndeterminate(double start, double end, CancellationToken token = default)
     {
         start = end;
-        end = start - 0.1;
+        end = start - 0.15;
         if (end < 0) end += 1d;
 
         if (token.IsCancellationRequested) return;
@@ -136,7 +138,7 @@ public class ProgressRing : GraphicsView
 
             this.Animate("indeterminateBackward", (de) =>
             {
-                _indeterminateDrawable.Start = start - 0.05;
+                _indeterminateDrawable.Start = start - 0.1;
                 _indeterminateDrawable.End = de - 1d;
                 _indeterminateDrawable.IsClockwise = false;
                 Invalidate();
@@ -146,10 +148,25 @@ public class ProgressRing : GraphicsView
 
                 await Task.Delay(250);
 
-                StartIndeterminate(token, start, end);
+                StartIndeterminate(start, end, token);
             });
         });
     }
+
+    #region BackgroundColor
+    public new Color BackgroundColor
+    {
+        get { return (Color)GetValue(BackgroundColorProperty); }
+        set { SetValue(BackgroundColorProperty, value); }
+    }
+
+    public static readonly new BindableProperty BackgroundColorProperty =
+        BindableProperty.Create(
+            nameof(BackgroundColor),
+            typeof(Color),
+            typeof(ProgressRing)
+            );
+    #endregion
 
     #region Color
     public Color Color
@@ -263,7 +280,7 @@ public class IndeterminateRingDrawable : BindableObject, IDrawable
         var x = Thickness / 2f;
         var y = x;
 
-        canvas.StrokeColor = Color.WithAlpha(0.2f);
+        canvas.StrokeColor = BackgroundColor is null ? Color.WithAlpha(0.2f) : BackgroundColor;
         canvas.StrokeSize = Thickness * 0.9f;
         canvas.DrawEllipse(x, y, width, height);
 
@@ -275,6 +292,21 @@ public class IndeterminateRingDrawable : BindableObject, IDrawable
 
         canvas.DrawArc(x, y, width, height, start, end, IsClockwise, false);
     }
+
+    #region BackgroundColor
+    public Color BackgroundColor
+    {
+        get { return (Color)GetValue(BackgroundColorProperty); }
+        set { SetValue(BackgroundColorProperty, value); }
+    }
+
+    public static readonly BindableProperty BackgroundColorProperty =
+        BindableProperty.Create(
+            nameof(BackgroundColor),
+            typeof(Color),
+            typeof(IndeterminateRingDrawable)
+            );
+    #endregion
 
     #region Color
     public Color Color
@@ -346,7 +378,7 @@ public class ProgressRingDrawable : IndeterminateRingDrawable, IDrawable
 
         if (End < 1)
         {
-            canvas.StrokeColor = Color.WithAlpha(0.2f);
+            canvas.StrokeColor = BackgroundColor is null ? Color.WithAlpha(0.2f) : BackgroundColor;
             canvas.StrokeSize = Thickness * 0.9f;
             canvas.DrawEllipse(x, y, width, height);
 

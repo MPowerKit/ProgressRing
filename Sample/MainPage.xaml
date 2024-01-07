@@ -10,11 +10,11 @@
                              VerticalOptions="Center">
 
             <pr:ProgressRing x:Name="asda"
-                             HeightRequest="100"
+                             HeightRequest="50"
                              IsIndeterminate="True"
                              Smooth="True"
                              StrokeLineCap="Square"
-                             WidthRequest="100"
+                             WidthRequest="50"
                              Color="Red" />
 
             <Button x:Name="CounterBtn"

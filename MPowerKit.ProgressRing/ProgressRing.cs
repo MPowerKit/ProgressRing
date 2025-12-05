@@ -28,6 +28,17 @@ public class ProgressRing : GraphicsView
         this.Drawable = IsIndeterminate ? _indeterminateDrawable : _progressDrawable;
     }
 
+    protected override void OnHandlerChanged()
+    {
+        base.OnHandlerChanged();
+
+        if (Handler is not null) 
+            return;
+        
+        StopIndeterminate();
+        StopProgress();
+    }
+
     protected override void OnPropertyChanging([CallerMemberName] string? propertyName = null)
     {
         base.OnPropertyChanging(propertyName);

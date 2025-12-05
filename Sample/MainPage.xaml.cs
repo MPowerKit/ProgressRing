@@ -2,7 +2,7 @@
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
+        private int count = 0;
 
         public MainPage()
         {
@@ -13,7 +13,7 @@
         {
             count = 0;
 
-            asda.IsIndeterminate = false;
+            pr.IsIndeterminate = false;
 
             while (count < 100)
             {
@@ -23,10 +23,15 @@
 
                 CounterBtn.Text = $"Progress {count} %";
 
-                asda.Progress = count / 100d;
+                pr.Progress = count / 100d;
             }
 
-            asda.IsIndeterminate = true;
+            pr.IsIndeterminate = true;
+        }
+
+        private async void OnIsVisibleClicked(object sender, EventArgs e)
+        {
+            pr.IsVisible = !pr.IsVisible;
         }
     }
 }

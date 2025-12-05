@@ -12,15 +12,15 @@ public class ProgressRing : GraphicsView
 
     public ProgressRing()
     {
-        _indeterminateDrawable.SetBinding(IndeterminateRingDrawable.ColorProperty, new Binding(ColorProperty.PropertyName, source: this));
-        _indeterminateDrawable.SetBinding(IndeterminateRingDrawable.BackgroundColorProperty, new Binding(BackgroundColorProperty.PropertyName, source: this));
-        _indeterminateDrawable.SetBinding(IndeterminateRingDrawable.ThicknessProperty, new Binding(ThicknessProperty.PropertyName, source: this));
-        _indeterminateDrawable.SetBinding(IndeterminateRingDrawable.StrokeLineCapProperty, new Binding(StrokeLineCapProperty.PropertyName, source: this));
+        _indeterminateDrawable.SetBinding(IndeterminateRingDrawable.ColorProperty, static (ProgressRing pr) => pr.Color, source: this);
+        _indeterminateDrawable.SetBinding(IndeterminateRingDrawable.BackgroundColorProperty, static (ProgressRing pr) => pr.BackgroundColor, source: this);
+        _indeterminateDrawable.SetBinding(IndeterminateRingDrawable.ThicknessProperty, static (ProgressRing pr) => pr.Thickness, source: this);
+        _indeterminateDrawable.SetBinding(IndeterminateRingDrawable.StrokeLineCapProperty, static (ProgressRing pr) => pr.StrokeLineCap, source: this);
 
-        _progressDrawable.SetBinding(IndeterminateRingDrawable.ColorProperty, new Binding(ColorProperty.PropertyName, source: this));
-        _progressDrawable.SetBinding(IndeterminateRingDrawable.BackgroundColorProperty, new Binding(BackgroundColorProperty.PropertyName, source: this));
-        _progressDrawable.SetBinding(IndeterminateRingDrawable.ThicknessProperty, new Binding(ThicknessProperty.PropertyName, source: this));
-        _progressDrawable.SetBinding(IndeterminateRingDrawable.StrokeLineCapProperty, new Binding(StrokeLineCapProperty.PropertyName, source: this));
+        _progressDrawable.SetBinding(IndeterminateRingDrawable.ColorProperty, static (ProgressRing pr) => pr.Color, source: this);
+        _progressDrawable.SetBinding(IndeterminateRingDrawable.BackgroundColorProperty, static (ProgressRing pr) => pr.BackgroundColor, source: this);
+        _progressDrawable.SetBinding(IndeterminateRingDrawable.ThicknessProperty, static (ProgressRing pr) => pr.Thickness, source: this);
+        _progressDrawable.SetBinding(IndeterminateRingDrawable.StrokeLineCapProperty, static (ProgressRing pr) => pr.StrokeLineCap, source: this);
 
         WidthRequest = 50d;
         HeightRequest = 50d;
@@ -32,9 +32,14 @@ public class ProgressRing : GraphicsView
     {
         base.OnHandlerChanged();
 
-        if (Handler is not null) 
+        if (Handler is not null)
             return;
-        
+
+        Stop();
+    }
+
+    protected virtual void Stop()
+    {
         StopIndeterminate();
         StopProgress();
     }
@@ -47,27 +52,38 @@ public class ProgressRing : GraphicsView
         {
             _prevProgress = Progress;
         }
+        else if (propertyName == IsVisibleProperty.PropertyName && IsVisible)
+        {
+            Stop();
+        }
+        else if (propertyName == IsIndeterminateProperty.PropertyName && IsIndeterminate)
+        {
+            if (IsIndeterminate)
+            {
+                StopIndeterminate();
+            }
+            else
+            {
+                StopProgress();
+            }
+        }
     }
 
     protected override void OnPropertyChanged(string? propertyName = null)
     {
         base.OnPropertyChanged(propertyName);
 
-        if (propertyName == IsIndeterminateProperty.PropertyName && IsIndeterminate)
-        {
-            StopProgress();
+        if (!IsVisible) return;
 
+        if ((propertyName == IsIndeterminateProperty.PropertyName
+            || propertyName == IsVisibleProperty.PropertyName && IsVisible) && IsIndeterminate)
+        {
             this.Drawable = _indeterminateDrawable;
 
             StartIndeterminate();
         }
 
         if (IsIndeterminate) return;
-
-        if (propertyName == IsIndeterminateProperty.PropertyName && !IsIndeterminate)
-        {
-            StopIndeterminate();
-        }
 
         this.Drawable = _progressDrawable;
 
@@ -171,7 +187,7 @@ public class ProgressRing : GraphicsView
         set { SetValue(BackgroundColorProperty, value); }
     }
 
-    public static readonly new BindableProperty BackgroundColorProperty =
+    public static new readonly BindableProperty BackgroundColorProperty =
         BindableProperty.Create(
             nameof(BackgroundColor),
             typeof(Color),
@@ -377,6 +393,8 @@ public class ProgressRingDrawable : IndeterminateRingDrawable, IDrawable
 
     public override void Draw(ICanvas canvas, RectF dirtyRect)
     {
+        //if (!IsRunning) return;
+
         canvas.StrokeLineCap = StrokeLineCap;
 
         var width = dirtyRect.Width - Thickness;

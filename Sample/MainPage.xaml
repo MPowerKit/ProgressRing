@@ -9,10 +9,10 @@
                              Spacing="25"
                              VerticalOptions="Center">
 
-            <pr:ProgressRing x:Name="asda"
+            <pr:ProgressRing x:Name="pr"
                              HeightRequest="50"
                              IsIndeterminate="True"
-                             Smooth="True"
+                             Smooth="False"
                              StrokeLineCap="Square"
                              WidthRequest="50"
                              Color="Red" />
@@ -22,6 +22,11 @@
                     HorizontalOptions="Center"
                     SemanticProperties.Hint="Counts the number of times you click"
                     Text="Click me" />
+
+            <Button x:Name="visibleBtn"
+                    Clicked="OnIsVisibleClicked"
+                    HorizontalOptions="Center"
+                    Text="Is Visible" />
 
         </VerticalStackLayout>
     </ScrollView>

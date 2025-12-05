@@ -53,6 +53,32 @@ public class ProgressRing : GraphicsView
     {
         base.OnPropertyChanged(propertyName);
 
+        if (propertyName == IsVisibleProperty.PropertyName)
+        {
+            if (!IsVisible)
+            {
+                StopIndeterminate();
+                StopProgress();
+                return;
+            }
+
+            if (IsIndeterminate)
+            {
+                StartIndeterminate();
+                return;
+            }
+            
+            if (Smooth && Progress < 1)
+            {
+                StartProgress();
+                return;
+            }
+            
+            _progressDrawable.End = Progress;
+            Invalidate();
+            return;
+        }
+
         if (propertyName == IsIndeterminateProperty.PropertyName && IsIndeterminate)
         {
             StopProgress();
@@ -74,7 +100,6 @@ public class ProgressRing : GraphicsView
         if (propertyName == ProgressProperty.PropertyName && Smooth && Progress < 1)
         {
             StopProgress();
-
             StartProgress();
         }
         else

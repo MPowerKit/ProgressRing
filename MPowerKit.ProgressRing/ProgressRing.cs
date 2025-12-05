@@ -56,7 +56,7 @@ public class ProgressRing : GraphicsView
         {
             Stop();
         }
-        else if (propertyName == IsIndeterminateProperty.PropertyName && IsIndeterminate)
+        else if (propertyName == IsIndeterminateProperty.PropertyName)
         {
             if (IsIndeterminate)
             {
